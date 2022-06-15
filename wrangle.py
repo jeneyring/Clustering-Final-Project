@@ -13,6 +13,8 @@ These functions are for:
 import os
 import pandas as pd
 import env
+from sklearn.preprocessing import MinMaxScaler
+from sklearn.model_selection import train_test_split
 
 sql = """SELECT
         p.*,
@@ -86,17 +88,54 @@ def remove_columns(df, cols_to_remove):
 
 #How to handle missing values based on minimum percentage of values 
 #for rows and columns
-def handle_missing_values(df, prop_required_column = .5, prop_required_row = .75):
+def handle_missing_values(df, prop_required_column = .6, prop_required_row = .6):
     threshold = int(round(prop_required_column*len(df.index),0))
     df.dropna(axis=1, thresh=threshold, inplace=True)
     threshold = int(round(prop_required_row*len(df.columns),0))
     df.dropna(axis=0, thresh=threshold, inplace=True)
     return df
-#####_______________________________________
-#PUTTING ABOVE TWO FUNCTIONS TOGETHER:
-def data_prep(df, cols_to_remove=[], prop_required_column=.5, prop_required_row=.75):
-    df = remove_columns(df, cols_to_remove)
-    df = handle_missing_values(df, prop_required_column, prop_required_row)
+
+#dropping the remaining nulls
+def drop_r_nulls(df):
+    df = df.dropna()
     return df
 
+#changing dtypes to int
+def dtypes(df):
+    df = df.astype('int')
+    return df
 
+#####_______________________________________
+#PUTTING ABOVE CLEAN/PREP FUNCTIONS TOGETHER:
+def data_prep(df, cols_to_remove=[], prop_required_column=.6, prop_required_row=.6):
+    df = remove_columns(df, cols_to_remove)
+    df = handle_missing_values(df, prop_required_column, prop_required_row)
+    df = drop_r_nulls(df)
+    df = dtypes(df)
+    return df
+
+#####_____________________________________
+#Splitting the Data:
+def split_data(df):
+    '''
+    take in a DataFrame and return train, validate, and test DataFrames; stratify on species.
+    return train, validate, test DataFrames.
+    '''
+    
+    # splits df into train_validate and test using train_test_split() stratifying on fips to get an even mix of each county
+    train_validate, test = train_test_split(df, test_size=.2, random_state=123, stratify=df.fips)
+    
+    # splits train_validate into train and validate using train_test_split() stratifying on fips to get an even mix of each county
+    train, validate = train_test_split(train_validate, 
+                                       test_size=.3, 
+                                       random_state=123, 
+                                       stratify=train_validate.fips)
+    return train, validate, test
+#to use, type 'split_data('add your df here')
+
+######____________________________________________
+#Encoding fips
+def one_hot_encode(train):
+    train['is_Los_Angeles'] = train.fips == 6037.0
+    train["is_Los_Angeles"] = train["is_Los_Angeles"].astype(int)
+    return train
