@@ -12,6 +12,7 @@ These functions are for:
 #imports for functions to work:
 import os
 import pandas as pd
+import numpy as np
 import env
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.model_selection import train_test_split
@@ -100,10 +101,7 @@ def drop_r_nulls(df):
     df = df.dropna()
     return df
 
-#changing dtypes to int
-def dtypes(df):
-    df = df.astype('int')
-    return df
+
 
 #####_______________________________________
 #PUTTING ABOVE CLEAN/PREP FUNCTIONS TOGETHER:
@@ -111,7 +109,6 @@ def data_prep(df, cols_to_remove=[], prop_required_column=.6, prop_required_row=
     df = remove_columns(df, cols_to_remove)
     df = handle_missing_values(df, prop_required_column, prop_required_row)
     df = drop_r_nulls(df)
-    df = dtypes(df)
     return df
 
 #####_____________________________________
@@ -131,11 +128,66 @@ def split_data(df):
                                        random_state=123, 
                                        stratify=train_validate.fips)
     return train, validate, test
+
+def handle_outliers(df):
+    """Manually handle outliers that do not represent properties likely for the larger majority of buyers and zillow visitors"""
+    #max/min of calculatedsqft
+    df = df[df.calculatedfinishedsquarefeet <= 9_000]
+    df = df[df.calculatedfinishedsquarefeet >= 200]
+    #max/min of bedroomcnt
+    df = df[df.bedroomcnt <= 6]
+    df = df[df.bedroomcnt != 0]
+    #max/min of bathroomcnt
+    df = df[df.bathroomcnt <= 6]
+    df = df[df.bathroomcnt != 0]
+    #max/min of taxvaluedollar
+    df = df[df.taxvaluedollarcnt <= 2_500_000]
+    df = df[df.taxvaluedollarcnt >= 45_000]
+    #max/min of yearbuilt
+    df = df[df.yearbuilt <= 2016]
+    df = df[df.yearbuilt >= 1950]
+    #max/min of lot size
+    df = df[df.lotsizesquarefeet <= 435_600]
+    df = df[df.lotsizesquarefeet >= 2_500]
+
+    return df
+
+
 #to use, type 'split_data('add your df here')
 
 ######____________________________________________
 #Encoding fips
 def one_hot_encode(train):
     train['is_Los_Angeles'] = train.fips == 6037.0
-    train["is_Los_Angeles"] = train["is_Los_Angeles"].astype(int)
+    train['is_Ventura'] = train.fips == 6111.0
+    train['is_Orange'] = train.fips == 6059.0
     return train
+
+def dtype_county(train):
+    train["is_Los_Angeles"] = train["is_Los_Angeles"].astype(int)
+    train['is_Ventura'] = train['is_Ventura'].astype(int)
+    train['is_Orange'] = train['is_Orange'].astype(int)
+    return train
+
+### Adding above together: Use after having created split of train/validate/test
+
+def data_formats(train):
+    train = one_hot_encode(train)
+    train = dtype_county(train)
+    return train
+
+### Functions for Scaling data and specific columns for Zillow dataset
+def scale(train, validate, test):
+    columns_to_scale = ['parcelid','fips', 'yearbuilt', 'latitude', 'longitude', 'taxvaluedollarcnt', 'bathroomcnt', 'calculatedfinishedsquarefeet']
+    train_scaled = train.copy()
+    validate_scaled = validate.copy()
+    test_scaled = test.copy()
+
+    scaler = MinMaxScaler()
+    scaler.fit(train[columns_to_scale])
+
+    train_scaled[columns_to_scale] = scaler.transform(train[columns_to_scale])
+    validate_scaled[columns_to_scale] = scaler.transform(validate[columns_to_scale])
+    test_scaled[columns_to_scale] = scaler.transform(test[columns_to_scale])
+
+    return scaler, train_scaled, validate_scaled, test_scaled
