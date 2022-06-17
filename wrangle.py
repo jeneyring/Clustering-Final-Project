@@ -157,28 +157,48 @@ def handle_outliers(df):
 
 ######____________________________________________
 #Encoding fips
-def one_hot_encode(train):
+#encode fips
+def one_hot_encode(train, validate, test):
     train['is_Los_Angeles'] = train.fips == 6037.0
+    validate['is_Los_Angeles'] = validate.fips == 6037.0
+    test['is_Los_Angeles'] = test.fips == 6037.0
+    
     train['is_Ventura'] = train.fips == 6111.0
+    validate['is_Ventura'] = validate.fips == 6111.0
+    test['is_Ventura'] = test.fips == 6111.0
+    
     train['is_Orange'] = train.fips == 6059.0
-    return train
+    validate['is_Orange'] = validate.fips == 6059.0
+    test['is_Orange'] = test.fips == 6059.0
+    
+    return train, validate, test
 
-def dtype_county(train):
+
+def dtype_county(train, validate, test):
     train["is_Los_Angeles"] = train["is_Los_Angeles"].astype(int)
+    validate["is_Los_Angeles"] = validate["is_Los_Angeles"].astype(int)
+    test["is_Los_Angeles"] = test["is_Los_Angeles"].astype(int)
+
     train['is_Ventura'] = train['is_Ventura'].astype(int)
+    validate['is_Ventura'] = validate['is_Ventura'].astype(int)
+    test['is_Ventura'] = test['is_Ventura'].astype(int)
+
+
     train['is_Orange'] = train['is_Orange'].astype(int)
-    return train
+    validate['is_Orange'] = validate['is_Orange'].astype(int)
+    test['is_Orange'] = test['is_Orange'].astype(int)
+    return train, validate, test
 
 ### Adding above together: Use after having created split of train/validate/test
 
-def data_formats(train):
-    train = one_hot_encode(train)
-    train = dtype_county(train)
-    return train
+def data_formats(train, validate, test):
+    train = one_hot_encode(train, validate, test)
+    train = dtype_county(train, validate, test)
+    return train, validate, test
 
 ### Functions for Scaling data and specific columns for Zillow dataset
 def scale(train, validate, test):
-    columns_to_scale = ['parcelid','fips', 'yearbuilt', 'latitude', 'longitude', 'taxvaluedollarcnt', 'bathroomcnt', 'calculatedfinishedsquarefeet']
+    columns_to_scale = [ 'yearbuilt', 'latitude', 'longitude','lotsizesquarefeet' ,'taxvaluedollarcnt', 'calculatedfinishedsquarefeet']
     train_scaled = train.copy()
     validate_scaled = validate.copy()
     test_scaled = test.copy()
