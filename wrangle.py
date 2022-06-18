@@ -210,4 +210,4 @@ def scale(train, validate, test):
     validate_scaled[columns_to_scale] = scaler.transform(validate[columns_to_scale])
     test_scaled[columns_to_scale] = scaler.transform(test[columns_to_scale])
 
-    return scaler, train_scaled, validate_scaled, test_scaled
+    return train_scaled, validate_scaled, test_scaled
