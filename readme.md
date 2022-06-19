@@ -10,6 +10,9 @@ To help improve our current property value predictions model, I looked into some
 ### Background Data information:
 The data acquired in this project was collected from the MySQL database, that was based on the 2018 Kaggle competition. You can find out more about the origin of this dataset here: <a href="https://www.kaggle.com/competitions/zillow-prize-1/overview" title="Wikipedia">Kaggle's Zestimate Challenge.</a></li><br>
 
+### Project Description
+As a newly hired data scientist to Zillow's team, I have been asked by the team to see if I can add any new features and the fips codes to the current Zillow property value predictions model and see if these might improve the predictions results. 
+
 ### Data Dictionary:
 Some of the columns and datasets may not fully makes sense to those first meeting this data. Below is a table that helps define the features and terminology used in this project.
 
@@ -25,6 +28,18 @@ Some of the columns and datasets may not fully makes sense to those first meetin
 | taxvaluedollarcnt       |  52441 non-null: float64 | Property Value |
 | transactiondate   |  52441 non-null: object | date of property transactions|
 | fips |  52441 non-null: float64 | non-null: float64| fips code (county/state)|
+| yearbuilt |  52441 non-null: float64 | non-null: float64| year property was built|
+
+# Hypothesis:
+For the key features found in data (ie. counties, yearbuilt,calculated squarefeet, lotsize..etc )
+### Question: Is there a correlation of each feature to logerror?
+- H_0: There is no correlation to logerror
+- Ha: There is a correlation to logerror
+
+For cluster that were created after initial hypothesis tests:
+### Question: Do these made cluster correlate to the logerror results?
+- H_0: There is not correlation to clusters and logerror.
+- Ha: Ther is a correlation to clusters and logerror.
 
 # Project Steps:
 
