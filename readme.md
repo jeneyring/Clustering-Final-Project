@@ -1,7 +1,5 @@
 # Predicting Property Value for Zestimate scores at Zillow
-# _______________________________
 ## About the Project:
-# _______________________________
 ### Project Goals
 Zillow is known as one of the number one resources in not only property listings but also for Zestimate property values. These value scores help home owners determine what their home is worth and also worth listing as.
 
