@@ -27,13 +27,13 @@ Some of the columns and datasets may not fully makes sense to those first meetin
 | fips |  52441 non-null: float64 | non-null: float64| fips code (county/state)|
 
 # Project Steps:
-# __________________________________
+
 ## Acquire
 Within the wrangle.py file there are functions that will help to:
 - Pull in the 2017, Single Family Property residents with no duplicates
 - Read the SQL acquire query to a csv file
 - Assign the data to a variable
-# ___________________________________
+
 ## Prepare
 Within the wrangle.py file there are functions for the prepare stage that:
 - Clean up the nulls by 60/60%
@@ -44,7 +44,7 @@ Within the wrangle.py file there are functions for the prepare stage that:
 The same wrangle.py file also holds scaling functions that:
 - Use a MinMax scaler to scale train, validate and test data
 - Drops logerror (target variable) from scaling functions
-# ___________________________________
+
 ## Explore
 Within the Final Report, there is a step-by-step breakdown of my Exploration methods, as well as the clusters created.
 Cluster created and mentioned are:
@@ -52,12 +52,12 @@ Cluster created and mentioned are:
 - Cluster_LA: this holds cluster model on features only applicable to LA county
 - Cluster_value: this holds a cluster model of features of taxvalue and calculated sqft.
 - Cluster_prop_age_size: This holds the clusters of yearbuilt, calculsqft (minus county)
-# ____________________________________
+
 ## Model
 The Final_report notebook holds each method of model used in this project. Models include steps to produce: OLS| LassLars | GLM | Polynomial 2 & 3 degree.
 
 The function for the final chosen model can be found in model.py
-# ____________________________________
+
 ## Conclusion
 Using the unstructured ML method of cluster models does not show to be the best model method when it comes to determining logerror predictions. 
 
@@ -65,7 +65,7 @@ If another cluster-model is wanted, I would suggest adding one more approach to 
 
 I also think that the Regression model was the best approach and by adding in new features such as GreatSchools.com data, and a better 2016-2017 census source would improve the Zillow model by taking into account key features of the clients and their needs/income as well.
 
-# ____________________________________
+
 # To Reproduce:
 - [x] Read this README.md
 - [ ] Download wrangle.py , model.py, and Final_report.ipynb in your working directory.
