@@ -175,18 +175,18 @@ def one_hot_encode(train, validate, test):
 
 
 def dtype_county(train, validate, test):
-    train["is_Los_Angeles"] = train["is_Los_Angeles"].astype(int)
-    validate["is_Los_Angeles"] = validate["is_Los_Angeles"].astype(int)
-    test["is_Los_Angeles"] = test["is_Los_Angeles"].astype(int)
+    train["is_Los_Angeles"] = train["is_Los_Angeles"].astype('int')
+    validate["is_Los_Angeles"] = validate["is_Los_Angeles"].astype('int')
+    test["is_Los_Angeles"] = test["is_Los_Angeles"].astype('int')
 
-    train['is_Ventura'] = train['is_Ventura'].astype(int)
-    validate['is_Ventura'] = validate['is_Ventura'].astype(int)
-    test['is_Ventura'] = test['is_Ventura'].astype(int)
+    train['is_Ventura'] = train['is_Ventura'].astype('int')
+    validate['is_Ventura'] = validate['is_Ventura'].astype('int')
+    test['is_Ventura'] = test['is_Ventura'].astype('int')
 
 
-    train['is_Orange'] = train['is_Orange'].astype(int)
-    validate['is_Orange'] = validate['is_Orange'].astype(int)
-    test['is_Orange'] = test['is_Orange'].astype(int)
+    train['is_Orange'] = train['is_Orange'].astype('int')
+    validate['is_Orange'] = validate['is_Orange'].astype('int')
+    test['is_Orange'] = test['is_Orange'].astype('int')
     return train, validate, test
 
 ### Adding above together: Use after having created split of train/validate/test
@@ -211,3 +211,29 @@ def scale(train, validate, test):
     test_scaled[columns_to_scale] = scaler.transform(test[columns_to_scale])
 
     return train_scaled, validate_scaled, test_scaled
+
+
+def imports():
+    # ignore warnings
+    import warnings
+    warnings.filterwarnings("ignore")
+    import wrangle
+    import model
+
+    import pandas as pd
+    pd.options.display.max_rows = 100
+
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    import numpy as np
+
+    from scipy import stats
+    from sklearn.preprocessing import MinMaxScaler
+    from sklearn.model_selection import train_test_split
+    from sklearn.cluster import KMeans
+    from sklearn.metrics import mean_squared_error, r2_score, explained_variance_score
+    from sklearn.linear_model import LinearRegression, LassoLars, TweedieRegressor
+    from sklearn.preprocessing import PolynomialFeatures
+    from sklearn.feature_selection import RFE
+
+    return imports
